@@ -1,0 +1,107 @@
+options {
+  IGNORE_CASE = true;
+}
+
+PARSER_BEGIN(ParteB1)
+
+import java.io.*;
+
+public class ParteB1 {
+
+  public  static void main(String args[])
+  {
+
+    String nome_arquivo = args[0];
+    ParteB1 exemplo;
+
+    try {
+        exemplo = new ParteB1(new java.io.FileInputStream(nome_arquivo));
+    }
+    catch (java.io.FileNotFoundException e) {
+        System.out.println("Arquivo " + nome_arquivo + " nao foi encontrado.");
+        return;
+    }
+
+    try {
+      exemplo.analisador_lexico();
+      System.out.println("Programa analisado com sucesso.");
+    } catch(ParseException e) {
+      System.out.println(e.getMessage());
+    }
+
+  }
+}
+
+PARSER_END(ParteB1)
+
+SKIP :
+{
+  " "
+| "\t"
+| "\n"
+| "\r"
+| "\f"
+}
+
+/* Comentário de Múltiplas Linhas */
+SKIP :
+{
+  "/*" : multilinecomment
+}
+
+<multilinecomment> SKIP:
+{
+   "*/" : DEFAULT
+|  <~[]>
+}
+
+/* Palavras Reservadas */
+
+TOKEN :
+{
+  < INICIO: "inicio" >
+| < FIM: "fim" >
+| < READ: "read" >
+}
+
+/* Comandos */
+
+TOKEN :
+{
+  < E: "comando" >
+| < comando_composto: "comando composto" >
+| < IF: "se" >
+ 
+}
+
+/* Identificadores */
+
+TOKEN :
+{
+  < ID: <LETRA> (<LETRA>|<DIGITO>)* >
+| < #LETRA:["A"-"Z","a"-"z"] >
+| < #DIGITO:["0"-"9"] >
+}
+
+/* Operadores */
+
+TOKEN :
+{
+  < PONTO_VIRGULA: ";" >
+| < ABRE_PARENTESES: "(" >
+| < FECHA_PARENTESES: ")" >
+| < IGUAL: "=" >
+}
+
+JAVACODE void analisador_lexico()
+{
+  try {
+    Token t = getNextToken();
+    while(t.kind != 0) {
+      System.out.println("\t (" + t.beginLine + ", " + t.beginColumn + "): " + t.image + " - " + tokenImage[t.kind]);
+      t = getNextToken();
+    }
+  } catch (TokenMgrError error) {
+    System.out.println(error.getMessage());
+  }
+}
