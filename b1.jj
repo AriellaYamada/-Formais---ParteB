@@ -72,14 +72,13 @@ TOKEN:
 | <CLOSE_PAR: ")">
 |	<OPEN_BRACE: "{">
 |	<CLOSE_BRACE: "}">
-|	<SEMICOLON: ";">
 |	<COMMA: ",">
 |	<QUOT: "\"">
 |	<OPEN_BRACK: "[">
 |	<CLOSE_BRACK: "]">
 |	<DOT: ".">
 |	<ASSIGN_SYMBOL: "=">
-| <SEPARADOR: <SEMICOLON>|"\\n">
+| <SEPARADOR: ";"|"\\n">
 }
 
 
