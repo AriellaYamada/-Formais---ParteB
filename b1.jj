@@ -22,7 +22,17 @@ SKIP : {
   |  "\n"
   |  "\r"
   |  <"//" (~["\n","\r"])* ("\n" | "\r" | "\r\n")>
-  |  <"/*" (~["*"])* "*" ("*" | ~["*","/"] (~["*"])* "*")* "/">
+}
+/* COMENTARIO DE MULTIPLAS LINHAS */
+SKIP :
+{
+  "/*" : multilinecomment
+}
+
+<multilinecomment> SKIP:
+{
+   "*/" : DEFAULT
+|  <~[]>
 }
 
 /* SÍMBOLOS */
