@@ -124,3 +124,16 @@ TOKEN:
 	< ID: <LETTER> (<ALPHANUMERIC> )* > |
 	<STRING: <QUOT>(<ALPHANUMERIC>|<SYMBOL>|<LINE_BREAK>)*<QUOT>>
 }
+
+JAVACODE void analisador_lexico()
+{
+  try {
+    Token t = getNextToken();
+    while(t.kind != 0) {
+      System.out.println("\t (" + t.beginLine + ", " + t.beginColumn + "): " + t.image + " - " + tokenImage[t.kind]);
+      t = getNextToken();
+    }
+  } catch (TokenMgrError error) {
+    System.out.println(error.getMessage());
+  }
+}
