@@ -1,3 +1,148 @@
+options {
+  IGNORE_CASE = true;
+  DEBUG_PARSER = true;
+}
+
+PARSER_BEGIN(AnalisadorSintatico)
+
+import java.io.*;
+
+public class AnalisadorSintatico {
+
+  public  static void main(String args[])
+  {
+
+    String nome_arquivo = args[0];
+    AnalisadorSintatico analisador;
+
+    try {
+        analisador = new AnalisadorSintatico(new java.io.FileInputStream(nome_arquivo));
+    }
+    catch (java.io.FileNotFoundException e) {
+        System.out.println("Arquivo " + nome_arquivo + " nao foi encontrado.");
+        return;
+    }
+
+    try {
+      analisador.start();
+      System.out.println("Programa analisado com sucesso.");
+    } catch(ParseException e) {
+      System.out.println(e.getMessage());
+    }
+
+  }
+}
+
+PARSER_END(AnalisadorSintatico)
+
+SKIP : {
+  " "
+  |  "\t"
+  |  "\n"
+  |  "\r"
+  |  <"//" (~["\n","\r"])* ("\n" | "\r" | "\r\n")>
+}
+/* COMENTARIO DE MULTIPLAS LINHAS */
+SKIP :
+{
+  "/*" : multilinecomment
+}
+
+<multilinecomment> SKIP:
+{
+   "*/" : DEFAULT
+|  <~[]>
+}
+
+/* SÍMBOLOS */
+TOKEN:
+{
+    <LINE_BREAK: "\\n" | "\\r" | "\\r\\n" > |
+    <PLUS: "+"> |
+    <MINUS: "-"> |
+    <DIV: "/"> |
+    <MUL: "*"> |
+    <MOD: "%"> |
+    <POWER: "^"> |
+    <PLUSPLUS: "++"> |
+    <MINUSMINUS: "--"> |
+    <OR: "||"> |
+    <AND: "&&"> |
+    <NOT: "!"> |
+    <MINUS_ASSIGN: "-="> |
+    <PLUS_ASSIGN: "+="> |
+    <DIV_ASSIGN: "/="> |
+    <MUL_ASSIGN: "*="> |
+    <MOD_ASSIGN: "%="> |
+    <POWER_ASSIGN: "^="> |
+    <BIGGER_THAN: ">"> |
+    <SMALLER_THAN: "<"> |
+    <BIGGER_EQUAL_THAN: ">="> |
+    <SMALLER_EQUAL_THAN: "<="> |
+    <EQUAL: "=="> |
+    <NOT_EQUAL: "!=">
+}
+
+
+/* SEPARADORES E AGRUPADORES */
+TOKEN:
+{
+  <OPEN_PAR: "(">
+| <CLOSE_PAR: ")">
+|	<OPEN_BRACE: "{">
+|	<CLOSE_BRACE: "}">
+|	<COMMA: ",">
+| <SEMICOLON: ";">
+|	<QUOT: "\"">
+|	<OPEN_BRACK: "[">
+|	<CLOSE_BRACK: "]">
+|	<DOT: ".">
+|	<ASSIGN_SYMBOL: "=">
+| <SEPARADOR: ";"|"\\n">
+}
+
+/* PALAVRAS RESERVADAS E FUNÇÕES NATIVAS */
+TOKEN:
+{
+  <IBASE: "ibase">
+  | <SCALE: "scale">
+	|	<LAST: "last" | <DOT>>
+	|	<OBASE: "obase">
+	|	<SQRT: "sqrt">
+	|	<LENGTH: "length">
+	|	<FUNC_S: "s">
+	|	<FUNC_C: "c">
+	|	<FUNC_E: "e">
+	|	<FUNC_L: "l">
+	|	<FUNC_A: "a">
+	|	<FUNC_J: "j">
+	|	<IF: "if">
+	|	<ELSE: "else">
+	|	<WHILE: "while">
+	|	<FOR: "for">
+	|	<PRINT: "print">
+	|	<DEFINE: "define">
+	|	<AUTO: "auto">
+	|	<BREAK: "break">
+	|	<CONTINUE: "continue">
+	|	<QUIT: "quit">
+	|	<RETURN: "return">
+}
+
+/* NUMEROS, PALAVRAS E IDENTIFICADORES */
+TOKEN:
+{
+  <#DIGIT: ["0"-"9"] > |
+  <#LETTER: "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m" | "n" | "o" | "p"| "q" | "r" | "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z" | "_"> |
+  <#SYMBOL: " " | <NOT> | "%" | "&" | "'" | "(" | ")" | "*" | "+" | "," | "-" | "." | "/" | ":" | ";" | <SMALLER_THAN> | <ASSIGN_SYMBOL> | <BIGGER_THAN>  | "[" | "]" | "^" | "{" | "|" | "}"> |
+	<#INTEGER: ("-" | "+")? (<DIGIT>)+> |
+	<#REAL: ("-" | "+")? (<DIGIT>)+ "." (<DIGIT>)+> |
+	<NUM: <INTEGER> | <REAL> > |
+	<#ALPHANUMERIC: <DIGIT> | <LETTER> > |
+	< ID: <LETTER> (<ALPHANUMERIC> )* > |
+	<STRING: <QUOT>(<DIGIT>|<LETTER>|<SYMBOL>|<INTEGER>|<REAL>|<NUM>|<ALPHANUMERIC>|<LINE_BREAK>)*<QUOT>>
+}
+
 void start():
 {
   /*var locais*/
