@@ -4,13 +4,30 @@ import java.io.*;
 
 public class BCparser{
     public static void main(String[] args) throws ParseException, TokenMgrError{
-        BCparser bcparser = new BCparser(System.in);
+      /*  BCparser bcparser = new BCparser(System.in);
         try{
             bcparser.start();
             System.out.println("Sucesso!");
         }catch (Exception e) {
             //System.out.println(e.toString());
             System.out.println("Erro!\n");
+        }*/
+        String nome_arquivo = args[0];
+        BCparser parser;
+
+        try {
+            parser = new BCparser(new java.io.FileInputStream(nome_arquivo));
+        }
+        catch (java.io.FileNotFoundException e) {
+            System.out.println("Arquivo " + nome_arquivo + " nao foi encontrado.");
+            return;
+        }
+
+        try {
+          parser.analisador_lexico();
+          System.out.println("Programa analisado com sucesso.");
+        } catch(ParseException e) {
+          System.out.println(e.getMessage());
         }
     }
 }
@@ -120,7 +137,7 @@ TOKEN:
 	<NUM: <INTEGER> | <REAL> > |
 	<#ALPHANUMERIC: <DIGIT> | <LETTER> > |
 	< ID: <LETTER> (<ALPHANUMERIC> )* > |
-	<STRING: <QUOT>(<DIGIT>|<LETTER>|<SYMBOL>|<INTEGER>|<REAL>|<NUMBER>|<ALPHANUMERIC>|<LINE_BREAK>)*<QUOT>>
+	<STRING: <QUOT>(<DIGIT>|<LETTER>|<SYMBOL>|<INTEGER>|<REAL>|<ALPHANUMERIC>|<LINE_BREAK>)*<QUOT>>
 }
 
 JAVACODE void analisador_lexico()

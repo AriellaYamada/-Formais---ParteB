@@ -3,20 +3,20 @@ options {
   DEBUG_PARSER = true;
 }
 
-PARSER_BEGIN(AnalisadorSintatico)
+PARSER_BEGIN(BCAnalisadorSintatico)
 
 import java.io.*;
 
-public class AnalisadorSintatico {
+public class BCAnalisadorSintatico {
 
   public  static void main(String args[])
   {
 
     String nome_arquivo = args[0];
-    AnalisadorSintatico analisador;
+    BCAnalisadorSintatico analisador;
 
     try {
-        analisador = new AnalisadorSintatico(new java.io.FileInputStream(nome_arquivo));
+        analisador = new BCAnalisadorSintatico(new java.io.FileInputStream(nome_arquivo));
     }
     catch (java.io.FileNotFoundException e) {
         System.out.println("Arquivo " + nome_arquivo + " nao foi encontrado.");
@@ -33,7 +33,7 @@ public class AnalisadorSintatico {
   }
 }
 
-PARSER_END(AnalisadorSintatico)
+PARSER_END(BCAnalisadorSintatico)
 
 SKIP : {
   " "
